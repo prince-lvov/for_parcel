@@ -1,0 +1,32 @@
+{
+  "name": "messenger",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"parcel pug/index.pug pug/index2.pug pug/chat-page.pug\" \"node ./js/server.js\"",
+    "watch": "parcel serve --host 0.0.0.0 pug/index.pug old_template/login.pug pug/chat-page.pug",
+    "dev": "parcel pug/index.pug pug/index2.pug old_template/profile.pug pug/chat-page.pug --port 3000",
+    "build": "parcel build pug/index.pug pug/index2.pug old_template/chat-page.pug",
+    "dev3": "parcel pug/index777.pug route/include/layout.pug  --no-cache",
+    "dev4": "parcel index.pug --no-cache"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-pug": "^2.0.0-beta.2",
+    "@parcel/transformer-sass": "^2.0.0-beta.2",
+    "@types/lodash": "^4.14.170",
+    "concurrently": "^6.2.0",
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "lodash": "^4.17.21",
+    "parcel": "^2.0.0-beta.2",
+    "pug": "^2.0.4",
+    "stylelint": "^13.13.1",
+    "typescript": "^4.3.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "keywords": [],
+  "description": ""
+}
