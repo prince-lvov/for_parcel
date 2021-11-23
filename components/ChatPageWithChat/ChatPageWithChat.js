@@ -1,5 +1,7 @@
 import { VDom } from "../../my_core/VDom";
+import Router, {RouterLink} from "../../my_core/router";
 export { App }
+import WebSocket from "../../my_core/WebSocket";
 
 //#########################
 
@@ -19,26 +21,34 @@ function Sidebar ({ chats }) {
         //VDom.createElement(ChatListItems)
     )
 }
-
 function SidebarHeader () {
     return VDom.createElement('header', {},
         VDom.createElement('img', { src: require('../../images/main-logo.svg'), alt: 'Messenger' }),
         VDom.createElement('a', { className: 'profile', id: 'button_profile' },
             'Профиль',
             VDom.createElement('img', { src: require('../../images/round-arrow.svg'), alt: '' })),
-        VDom.createElement(SidebarSearch)
+        VDom.createElement(SidebarSearch),
+        VDom.createElement(RouterLink, {text: 'Добавить чат', url: '/messenger'})
     )
 }
-
 function SidebarSearch () {
     return VDom.createElement('div', { className: 'search-line' },
         VDom.createElement('input', { type: 'search' }),
         VDom.createElement('div', { className: 'search-background' },
             VDom.createElement('img', { src: require('../../images/search.svg'), alt: '' }),
-            VDom.createElement('span', {}, 'Поиск')),
-        VDom.createElement('img', { className: 'search-icon', src: require('../../images/search.svg'), alt: '' })
+            VDom.createElement('span', {}, 'Название нового чата')),
+    //  VDom.createElement('img', { className: 'search-icon', src: require('../../images/search.svg'), alt: '' })
     )
 }
+// function SidebarSearch () {
+//     return VDom.createElement('div', { className: 'search-line' },
+//         VDom.createElement('input', { type: 'search' }),
+//         VDom.createElement('div', { className: 'search-background' },
+//             VDom.createElement('img', { src: require('../../images/search.svg'), alt: '' }),
+//             VDom.createElement('span', {}, 'Поиск')),
+//         VDom.createElement('img', { className: 'search-icon', src: require('../../images/search.svg'), alt: '' })
+//     )
+// }
 
 function SidebarSearchResults1 () {
     return VDom.createElement('div',{ className: 'search-results' })
@@ -61,7 +71,9 @@ function ChatListArea ({ chats }) {
 }
 
 function ChatListItems ({ chat }) {
-    return VDom.createElement('div', { className: 'chat-wrapper' },
+    return VDom.createElement('div', { className: 'chat-wrapper', onclick: (e) => {
+                console.log(chat)
+            } },
         VDom.createElement('div', { className: 'chat'},
             VDom.createElement('div', { className: 'chat--smile' }),
             VDom.createElement('time', { className: 'chat--time' }),

@@ -2,6 +2,7 @@ import { VDom } from "./VDom";
 import { App } from "../components/ChatPageWithChat/ChatPageWithChat";
 import { App_LoginPage } from "../components/LoginPage/LoginPage";
 import { App_RegisterPage } from "../components/RegisterPage/RegisterPage";
+import Router from './router'
 
 let state = {
     timer: new Date(),
@@ -9,41 +10,54 @@ let state = {
 }
 const host = 'https://ya-praktikum.tech/api/v2'
 
-// fetch(`${host}/auth/signup`, {
-//     method: 'POST',
-//     credentials: 'include',
-//     mode: 'cors',
-//     headers: {
-//         'content-type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//         first_name: 'Марина',
-//         second_name: 'Липина',
-//         login: 'malvina',
-//         email: 'malvi058@yandex.ru',
-//         phone: '89270901106',
-//         password: 'rnbrnbc4',
-//     }),
-// })
-//     .then(response => response.text())
-//     .then(data => {
-//         console.log(data)
-//         return data
-//     })
-//     .then(data => {
-//         fetch(`${host}/auth/user`, {
-//             method: 'GET',
-//             mode: 'cors',
-//             credentials: 'include',
-//         })
-//         .then(r => r.json())
-//         .then(data => {
-//             console.log('user', data)
-//         })
-//     })
+function register () {
+    const first_name = (document.getElementsByName('first_name')[0]).value
+    const second_name = (document.getElementsByName('second_name')[0]).value
+    const login = (document.getElementsByName('login')[0]).value
+    const email = (document.getElementsByName('email')[0]).value
+    const phone = (document.getElementsByName('phone')[0]).value
+    const password1 = (document.getElementsByName('password1')[0]).value
+    const password2 = (document.getElementsByName('password2')[0]).value
 
+    return fetch(`${host}/auth/signup`, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            first_name,
+            second_name,
+            login,
+            email,
+            phone,
+            password: password1
+            // first_name,
+            // second_name: 'Липина',
+            // login: 'malvina5',
+            // email: 'malvi0585@yandex.ru',
+            // phone: '89270901106',
+            // password: 'rnbrnbc4',
+        }),
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+            //    return data
+        })
+}
+
+function LoginPage () {
+    renderView(state, App_LoginPage)
+}
+function RegisterPage () {
+    renderView(state, App_RegisterPage)
+}
 
 function signin () {
+    const login = (document.getElementsByName('login')[0]).value
+    const password = (document.getElementsByName('password')[0]).value
     return fetch(`${host}/auth/signin`, {
         method: 'POST',
         credentials: 'include',
@@ -52,8 +66,10 @@ function signin () {
             'content-type': 'application/json',
         },
         body: JSON.stringify({
-            login: 'malvina',
-            password: 'rnbrnbc4',
+            login,
+            password
+            // login: 'malvina',
+            // password: 'rnbrnbc4',
         }),
     })
         .then(r => r.text())
@@ -74,6 +90,9 @@ function get_user_info () {
             console.log('user', data)
         })
 }
+function ok () {
+    signin().then(get_chats)
+}
 
 function get_chats () {
     return fetch(`${host}/chats`, {
@@ -90,7 +109,7 @@ function get_chats () {
             console.log(text)
             console.log(state)
             console.log('Get chats and refresh state')
-            renderView(state)
+            renderView(state, App)
         })
 }
 
@@ -111,9 +130,9 @@ function logout () {
 
 
 
-function renderView (state) {
+function renderView (state, page) {
     render(
-        VDom.createElement(App_RegisterPage, {state}),
+        VDom.createElement(page, {state}),
         document.getElementById('root')
     )
 }
@@ -214,13 +233,32 @@ function  createRealNodeByVirtual (virtual) {
     return document.createElement(virtual.type)
 }
 
+Router.get()
+    .addRoute({
+        component: get_chats,
+        name: 'settings',
+        path: '/settings'
+    })
+    .addRoute({
+        component: RegisterPage,
+        name: 'sign-up',
+        path: '/sign-up'
+    })
+    .addRoute({
+        component: ok,
+        name: 'messenger',
+        path: '/messenger'
+    })
+    .addRoute({
+        component: LoginPage,
+        name: 'index',
+        path: '/'
 
-renderView(state)
+    }).render()
 
 //#########################
 
-//signin().then(get_chats).then(logout)
+//signin()
 
 
 
-//#########################

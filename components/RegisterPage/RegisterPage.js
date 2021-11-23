@@ -1,4 +1,5 @@
 import { VDom } from "../../my_core/VDom";
+import {RouterLink} from "../../my_core/router";
 export { App_RegisterPage }
 
 //#########################
@@ -16,8 +17,12 @@ function App_RegisterPage () {
 function RegisterForm () {
     return VDom.createElement('form', { className: 'register' },
         VDom.createElement('div', { className: 'input-group' },
-            VDom.createElement('label', { for: 'name' }, 'Имя и Фамилия'),
-            VDom.createElement('input', { type: 'text', name: 'name', id: 'name', autofocus: 'true' })
+            VDom.createElement('label', { for: 'name' }, 'Имя'),
+            VDom.createElement('input', { type: 'text', name: 'first_name', id: 'first_name', autofocus: 'true' })
+        ),
+        VDom.createElement('div', { className: 'input-group' },
+            VDom.createElement('label', { for: 'name' }, 'Фамилия'),
+            VDom.createElement('input', { type: 'text', name: 'second_name', id: 'second_name', autofocus: 'true' })
         ),
         VDom.createElement('div', { className: 'input-group' },
             VDom.createElement('label', { for: 'login' }, 'Логин'),
@@ -43,8 +48,8 @@ function RegisterForm () {
             VDom.createElement('div', { className: 'error' })
         ),
         VDom.createElement('div', { className: 'modal-bottom'},
-            VDom.createElement('button', {}, 'Зарегистрироваться'),
-            VDom.createElement('a', { id: 'button_to_login' }, 'Уже есть аккаунт?')
+            VDom.createElement(RouterLink, { text: 'Зарегистрироваться', url: '/' }),
+            VDom.createElement(RouterLink, { text: 'Уже есть аккаунт?', url: '/' })
         )
     )
 }

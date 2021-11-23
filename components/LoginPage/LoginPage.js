@@ -1,5 +1,6 @@
 import { VDom } from "../../my_core/VDom";
 export { App_LoginPage }
+import { RouterLink } from "../../my_core/router";
 
 //#########################
 
@@ -25,8 +26,8 @@ function LoginForm () {
         ),
         VDom.createElement('div', { className: 'error' }),
         VDom.createElement('div', { className: 'modal-bottom'},
-            VDom.createElement('button', {}, 'Войти'),
-            VDom.createElement('a', { id: 'button_to_register' }, 'Еще не зарегистрированы?')
+            VDom.createElement(RouterLink, { text: 'Войти', url: '/messenger' }),
+            VDom.createElement(RouterLink, { text: 'Зарегистрироваться', url: '/sign-up' })
         )
     )
 }
