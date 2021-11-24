@@ -1,6 +1,5 @@
 import { VDom } from "../../my_core/VDom";
 import Router, {RouterLink} from "../../my_core/router";
-import { register } from "../../my_core/core";
 
 const host = 'https://ya-praktikum.tech/api/v2'
 
@@ -36,6 +35,9 @@ async function register (e) {
         alert(error.reason)
         return
     }
+
+    alert('Регистрация успешна!')
+    Router.get().to('/')
 }
 
 export default function RegisterPage () {
