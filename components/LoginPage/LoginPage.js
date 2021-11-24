@@ -17,9 +17,13 @@ async function login (e) {
             'content-type': 'application/json',
         },
         body: JSON.stringify({ login, password }),
-    })).json()
-    
-    // обработать ошибки
+    }))
+
+    if (loginResult.status !== 200) {
+        const error = await loginResult.json()
+        alert(error.reason)
+        return
+    }
 
     const chatsResult = await fetch(`${host}/chats`, {
         method: 'GET',
@@ -36,8 +40,6 @@ async function login (e) {
     })
 
     state.user = await userResult.json()
-
-    console.log(state)
 
     Router.get().to('/messenger')
 }

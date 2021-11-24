@@ -5,13 +5,15 @@ const rootUrl = 'wss://ya-praktikum.tech/ws/chats/:userId/:chatId/:token';
 
 class WebSocketService {
     socket: WebSocket;
-    store: Store;
+    onMessage: Function
+    onConnect: Function
 
-    constructor(userId: number, chatId: number, token: string) {
-        const url = this.prepareUrl(userId, chatId, token);
-        this.socket = new WebSocket(url);
-        this.store = new Store();
-        this.init();
+    constructor(userId: number, chatId: number, token: string, onMessage: Function, onConnect: Function) {
+        const url = this.prepareUrl(userId, chatId, token)
+        this.socket = new WebSocket(url)
+        this.onMessage = onMessage
+        this.onConnect = onConnect
+        this.init()
     }
 
     prepareUrl(userId: number, chatId: number, token: string) {
@@ -25,6 +27,7 @@ class WebSocketService {
         this.socket.addEventListener('open',
             () => {
                 console.log('Соединение установлено');
+                this.onConnect()
             });
 
         this.socket.addEventListener('close', event => {
@@ -39,22 +42,27 @@ class WebSocketService {
 
         this.socket.addEventListener('message', event => {
             console.log('Получены данные', event.data);
-            // todo
-            // const {} = event.data;
-            // this.store.update({}, constants.routes.messages);
+            this.onMessage(event.data)
         });
 
         this.socket.addEventListener('error', event => {
             console.log('Ошибка', event);
             alert('Ошибка соединения');
         });
-
     }
 
     send(message: string) {
         const processedMessage = JSON.stringify({
             content: message,
             type: 'message',
+        });
+        this.socket.send(processedMessage);
+    }
+
+    getOld(from: number = 0) {
+        const processedMessage = JSON.stringify({
+            content: from,
+            type: 'get old',
         });
         this.socket.send(processedMessage);
     }

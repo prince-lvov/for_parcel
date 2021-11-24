@@ -6,12 +6,71 @@ import { state } from '../../my_core/core'
 
 const host = 'https://ya-praktikum.tech/api/v2'
 
+async function selectChat (chat) {
+    const onMessage = (message) => {
+        console.log(message)
+        const messages = JSON.parse(message)
+        Array.isArray(messages) ? state.messages.push(...messages) : state.messages.push(messages)
+        Router.get().to('/messenger')
+    }
+
+    if (state.currentChat?.id != chat.id) {
+        state.messages = []
+    }
+
+    const tokenResult = await fetch(`${host}/chats/token/${chat.id}`, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
+    })
+
+    const token = await tokenResult.json()
+
+    state.currentChat = chat
+    state.webSocket = new WebSocket(state.user.id, chat.id, token.token, onMessage, () => { state.webSocket.getOld() })
+
+    Router.get().to('/messenger')
+}
+
+async function sendMessage (e) {
+    e.preventDefault()
+    const message = (document.getElementsByName('message')[0]).value
+    state.webSocket.send(message)
+}
+
+async function getData () {
+    const chatsResult = await fetch(`${host}/chats`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+    })
+
+    state.chats = await chatsResult.json()
+
+    const userResult = await fetch(`${host}/auth/user`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+    })
+
+    state.user = await userResult.json()
+
+    Router.get().to('/messenger')
+}
+
 export default function ChatPage () {
-    return VDom.createElement('div', { className: 'site-wrapper main-view'},
+    if (!state.user) getData()
+
+    const children = state.currentChat ? [
         VDom.createElement(Sidebar, {chats: state.chats}),
         VDom.createElement(ChatPageWithChat),
         VDom.createElement(Popup)
-    )
+    ] : [
+        VDom.createElement(Sidebar, {chats: state.chats}),
+        VDom.createElement(Popup)
+    ]
+
+    return VDom.createElement('div', { className: 'site-wrapper main-view'}, children)
 }
 
 function Sidebar ({ chats }) {
@@ -78,9 +137,7 @@ function ChatListArea ({ chats }) {
 }
 
 function ChatListItems ({ chat }) {
-    return VDom.createElement('div', { className: 'chat-wrapper', onclick: (e) => {
-                console.log(chat)
-            } },
+    return VDom.createElement('div', { className: 'chat-wrapper', onclick: () => { selectChat(chat) } },
         VDom.createElement('div', { className: 'chat'},
             VDom.createElement('div', { className: 'chat--smile' }),
             VDom.createElement('time', { className: 'chat--time' }),
@@ -104,13 +161,11 @@ function ChatPageWithChat () {
         VDom.createElement('div', { className: 'chat-messages--parent' },
             VDom.createElement(ChatHeader),
             VDom.createElement(InputArea),
-            VDom.createElement(MessagesBody)),
-
-        // VDom.createElement(MessagesArea),
-        // VDom.createElement(ChatMessage),
-        // VDom.createElement(Popup)
+            VDom.createElement(MessagesBody)
+        ),
     )
 }
+
 function ChatHeader () {
     return VDom.createElement('div', { className: 'chat-messages--header' },
         VDom.createElement('div', { className: 'smile' }),
@@ -137,8 +192,8 @@ function InputArea () {
         VDom.createElement('div', { className: 'clip'},
             VDom.createElement('button', { type: 'button' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/clip.svg'), alt: '' }))),
-        VDom.createElement('input', { type: 'text', placeholder: 'Сообщение', name: 'NewMessage' }),
-        VDom.createElement('div', { className: 'arrow' },
+        VDom.createElement('input', { type: 'text', placeholder: 'Сообщение', name: 'message' }),
+        VDom.createElement('div', { className: 'arrow', onclick: sendMessage },
             VDom.createElement('button', { type: 'submit' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/send-arrow.svg'), alt: '' }))),
         VDom.createElement('ul', { className: 'submenu' },
@@ -156,17 +211,18 @@ function InputArea () {
 }
 
 function MessagesBody () {
+    const messages = state.messages.map(m => {
+        return m.user_id == state.user.id ? VDom.createElement(MessageMy, { message: m }) : VDom.createElement(MessageYou, { message: m })
+    })
     return VDom.createElement('div', { className: 'chat-messages--body' },
         VDom.createElement('div', { className: 'chat-message date-line' }, '17 Мая 2021'),
-        VDom.createElement(MessageMy),
-        VDom.createElement(MessageYou),
-        VDom.createElement(MessageImage)
+        ...messages
     )
 }
 
-function MessageMy () {
+function MessageMy ({ message }) {
     return VDom.createElement('div', { className: 'chat-message text-message is-my-message' },
-        VDom.createElement('div', { className: 'chat-message--text' }, 'Добрый день! Жду от Вас схему проезда, заранее спасибо!'),
+        VDom.createElement('div', { className: 'chat-message--text' }, message.content),
         VDom.createElement('div', { className: 'chat-message--time-and-status' },
             VDom.createElement('div', { className: 'chat-message--status visible' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/message-read.svg'), alt: '' })),
@@ -174,9 +230,9 @@ function MessageMy () {
     )
 }
 
-function MessageYou () {
+function MessageYou ({ message }) {
     return VDom.createElement('div', { className: 'chat-message text-message' },
-        VDom.createElement('div', { className: 'chat-message--text' }, 'Здравствуйте, ок.'),
+        VDom.createElement('div', { className: 'chat-message--text' }, message.content),
         VDom.createElement('div', { className: 'chat-message--time-and-status' },
             VDom.createElement('div', { className: 'chat-message--status' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/message-read.svg'), alt: '' })),
