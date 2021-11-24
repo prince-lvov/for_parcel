@@ -25,7 +25,10 @@ function Sidebar ({ chats }) {
 function SidebarHeader () {
     return VDom.createElement('header', {},
         VDom.createElement('img', { src: require('../../images/main-logo.svg'), alt: 'Messenger' }),
-        VDom.createElement('a', { className: 'profile', id: 'button_profile' },
+        VDom.createElement('button', { className: 'profile', id: 'button_profile', onclick: (e) => {
+                    e.preventDefault()
+                    Router.get().to('/settings')
+                } },
             'Профиль',
             VDom.createElement('img', { src: require('../../images/round-arrow.svg'), alt: '' })),
         VDom.createElement(SidebarSearch),

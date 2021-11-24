@@ -2,6 +2,7 @@ import { VDom } from "./VDom";
 import { App } from "../components/ChatPageWithChat/ChatPageWithChat";
 import { App_LoginPage } from "../components/LoginPage/LoginPage";
 import { App_RegisterPage } from "../components/RegisterPage/RegisterPage";
+import { App_ProfilePage } from "../components/ProfilePage/ProfilePage";
 import Router from './router'
 
 
@@ -65,6 +66,9 @@ function LoginPage () {
 }
 function RegisterPage () {
     renderView(state, App_RegisterPage)
+}
+function ProfilePage () {
+    renderView(state, App_ProfilePage)
 }
 
 function signin () {
@@ -264,7 +268,7 @@ function  createRealNodeByVirtual (virtual) {
 
 Router.get()
     .addRoute({
-        component: get_chats,
+        component: ProfilePage,
         name: 'settings',
         path: '/settings'
     })
