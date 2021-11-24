@@ -4,13 +4,24 @@ import { App_LoginPage } from "../components/LoginPage/LoginPage";
 import { App_RegisterPage } from "../components/RegisterPage/RegisterPage";
 import Router from './router'
 
+
 let state = {
     timer: new Date(),
     chats: []
 }
 const host = 'https://ya-praktikum.tech/api/v2'
 
-function register () {
+//Не работает
+function handleErrors(response) {
+    if (response.ok) {window.alert('Вы зарегистрированы')}
+    if (!response.ok) {
+        window.alert(response.status)
+        throw new Error(response.status)
+    }
+    return response;
+}
+
+export function register () {
     const first_name = (document.getElementsByName('first_name')[0]).value
     const second_name = (document.getElementsByName('second_name')[0]).value
     const login = (document.getElementsByName('login')[0]).value
@@ -19,7 +30,7 @@ function register () {
     const password1 = (document.getElementsByName('password1')[0]).value
     const password2 = (document.getElementsByName('password2')[0]).value
 
-    return fetch(`${host}/auth/signup`, {
+    fetch(`${host}/auth/signup`, {
         method: 'POST',
         credentials: 'include',
         mode: 'cors',
@@ -41,11 +52,12 @@ function register () {
             // password: 'rnbrnbc4',
         }),
     })
+        .then(handleErrors)
         .then(response => response.text())
         .then(data => {
             console.log(data)
             //    return data
-        })
+        }).catch(error => console.log(error))
 }
 
 function LoginPage () {
@@ -75,8 +87,27 @@ function signin () {
         .then(r => r.text())
         .then(text => {
             console.log(text)
-            console.log('Authorised')
         })
+}
+export function create_chat () {
+    const title = (document.getElementsByName('title')[0]).value
+    return fetch(`${host}/chats`, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            title
+        }),
+    })
+        .then(handleErrors)
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+            //    return data
+        }).catch(error => console.log(error))
 }
 
 function get_user_info () {
@@ -94,7 +125,7 @@ function ok () {
     signin().then(get_chats)
 }
 
-function get_chats () {
+export function get_chats () {
     return fetch(`${host}/chats`, {
         method: 'GET',
         mode: 'cors',
@@ -107,8 +138,6 @@ function get_chats () {
                 chats: text
             }
             console.log(text)
-            console.log(state)
-            console.log('Get chats and refresh state')
             renderView(state, App)
         })
 }

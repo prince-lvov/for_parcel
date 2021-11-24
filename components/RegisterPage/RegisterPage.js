@@ -1,5 +1,7 @@
 import { VDom } from "../../my_core/VDom";
-import {RouterLink} from "../../my_core/router";
+import Router, {RouterLink} from "../../my_core/router";
+import { register } from "../../my_core/core";
+
 export { App_RegisterPage }
 
 //#########################
@@ -48,7 +50,10 @@ function RegisterForm () {
             VDom.createElement('div', { className: 'error' })
         ),
         VDom.createElement('div', { className: 'modal-bottom'},
-            VDom.createElement(RouterLink, { text: 'Зарегистрироваться', url: '/' }),
+            VDom.createElement('button', { className: '', onclick: (e) => {
+                e.preventDefault()
+                register()
+                }}, 'Зарегистрироваться'),
             VDom.createElement(RouterLink, { text: 'Уже есть аккаунт?', url: '/' })
         )
     )
