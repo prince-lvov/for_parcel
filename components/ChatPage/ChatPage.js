@@ -6,6 +6,37 @@ import { state } from '../../my_core/core'
 
 const host = 'https://ya-praktikum.tech/api/v2'
 
+async function create_chat (e) {
+    e.preventDefault()
+    const title = (document.getElementsByName('title')[0]).value
+
+    const create_chatResult = (await fetch(`${host}/chats`, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({ title }),
+    }))
+
+    if (create_chatResult.status !== 200) {
+        const error = await create_chatResult.json()
+        alert(error.reason)
+        return
+    }
+
+    const chatsResult = await fetch(`${host}/chats`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+    })
+
+    state.chats = await chatsResult.json()
+
+    Router.get().to('/messenger')
+}
+
 async function selectChat (chat) {
     const onMessage = (message) => {
         console.log(message)
@@ -91,10 +122,7 @@ function SidebarHeader () {
             'Профиль',
             VDom.createElement('img', { src: require('../../images/round-arrow.svg'), alt: '' })),
         VDom.createElement(SidebarSearch),
-        VDom.createElement('button', { className: '', onclick: (e) => {
-                e.preventDefault()
-                create_chat().then(get_chats)
-            }}, 'Добавить чат')
+        VDom.createElement('button', { onclick: create_chat }, 'Добавить чат')
     )
 }
 function SidebarSearch () {

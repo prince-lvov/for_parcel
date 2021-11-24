@@ -2,6 +2,41 @@ import { VDom } from "../../my_core/VDom";
 import Router, {RouterLink} from "../../my_core/router";
 import { register } from "../../my_core/core";
 
+const host = 'https://ya-praktikum.tech/api/v2'
+
+async function register (e) {
+    e.preventDefault()
+    const first_name = (document.getElementsByName('first_name')[0]).value
+    const second_name = (document.getElementsByName('second_name')[0]).value
+    const login = (document.getElementsByName('login')[0]).value
+    const email = (document.getElementsByName('email')[0]).value
+    const phone = (document.getElementsByName('phone')[0]).value
+    const password1 = (document.getElementsByName('password1')[0]).value
+    const password2 = (document.getElementsByName('password2')[0]).value
+
+    const registerResult = (await fetch(`${host}/auth/signup`, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            first_name,
+            second_name,
+            login,
+            email,
+            phone,
+            password: password1
+        }),
+    }))
+
+    if (registerResult.status !== 200) {
+        const error = await registerResult.json()
+        alert(error.reason)
+        return
+    }
+}
 
 export default function RegisterPage () {
     return VDom.createElement('div', { className: 'site-wrapper hi-contrast-bg'},
@@ -47,10 +82,7 @@ function RegisterForm () {
             VDom.createElement('div', { className: 'error' })
         ),
         VDom.createElement('div', { className: 'modal-bottom'},
-            VDom.createElement('button', { className: '', onclick: (e) => {
-                e.preventDefault()
-                register()
-                }}, 'Зарегистрироваться'),
+            VDom.createElement('button', { onclick: register }, 'Зарегистрироваться'),
             VDom.createElement(RouterLink, { text: 'Уже есть аккаунт?', url: '/' })
         )
     )
