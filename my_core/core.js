@@ -1,15 +1,11 @@
 import { VDom } from "./VDom";
-import { App } from "../components/ChatPageWithChat/ChatPageWithChat";
-import { App_LoginPage } from "../components/LoginPage/LoginPage";
-import { App_RegisterPage } from "../components/RegisterPage/RegisterPage";
-import { App_ProfilePage } from "../components/ProfilePage/ProfilePage";
-import Router from './router'
 
 
-let state = {
+export const state = {
     timer: new Date(),
     chats: []
 }
+
 const host = 'https://ya-praktikum.tech/api/v2'
 
 //Не работает
@@ -59,16 +55,6 @@ export function register () {
             console.log(data)
             //    return data
         }).catch(error => console.log(error))
-}
-
-function LoginPage () {
-    renderView(state, App_LoginPage)
-}
-function RegisterPage () {
-    renderView(state, App_RegisterPage)
-}
-function ProfilePage () {
-    renderView(state, App_ProfilePage)
 }
 
 function signin () {
@@ -163,7 +149,7 @@ function logout () {
 
 
 
-function renderView (state, page) {
+export function renderView (state, page) {
     render(
         VDom.createElement(page, {state}),
         document.getElementById('root')
@@ -266,28 +252,7 @@ function  createRealNodeByVirtual (virtual) {
     return document.createElement(virtual.type)
 }
 
-Router.get()
-    .addRoute({
-        component: ProfilePage,
-        name: 'settings',
-        path: '/settings'
-    })
-    .addRoute({
-        component: RegisterPage,
-        name: 'sign-up',
-        path: '/sign-up'
-    })
-    .addRoute({
-        component: ok,
-        name: 'messenger',
-        path: '/messenger'
-    })
-    .addRoute({
-        component: LoginPage,
-        name: 'index',
-        path: '/'
 
-    }).render()
 
 //#########################
 

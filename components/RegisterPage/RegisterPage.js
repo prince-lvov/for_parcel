@@ -2,11 +2,8 @@ import { VDom } from "../../my_core/VDom";
 import Router, {RouterLink} from "../../my_core/router";
 import { register } from "../../my_core/core";
 
-export { App_RegisterPage }
 
-//#########################
-
-function App_RegisterPage () {
+export default function RegisterPage () {
     return VDom.createElement('div', { className: 'site-wrapper hi-contrast-bg'},
         VDom.createElement('div', { className: 'modal' },
             VDom.createElement('img', { src: require('../../images/main-logo.svg'), alt: 'Messenger'}),
@@ -58,10 +55,3 @@ function RegisterForm () {
         )
     )
 }
-
-//############
-
-
-
-
-

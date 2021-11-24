@@ -1,5 +1,5 @@
 import { VDom } from "./VDom"
-
+import { renderView, state } from './core'
 
 export interface Type<T> extends Function { new (...args: any[]): T; }
 
@@ -53,7 +53,7 @@ export default class Router {
     render () {
         const route = this.findRouteByPath(window.location.pathname)
         if (!route) throw new Error(`Маршрут ${window.location.pathname} не найден`)
-        route.component()
+        renderView(state, route.component)
     }
 
     to (name: string) {
@@ -64,19 +64,6 @@ export default class Router {
         this.render()
     }
 }
-
-// export class RouterLink extends Component<RouterLinkProps> {
-//     render () {
-//         const click = (e) => {
-//             e.preventDefault()
-//             Router.get().to(this.props.route)
-//         }
-//
-//         return (
-//             c('a', this.props.text, {}, { click })
-//         )
-//     }
-// }
 
 export function RouterLink ({ url, text }) {
     return VDom.createElement('button', { className: '', onclick: (e) => {

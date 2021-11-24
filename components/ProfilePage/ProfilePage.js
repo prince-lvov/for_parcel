@@ -1,12 +1,6 @@
 import { VDom } from "../../my_core/VDom";
-// import Router, {RouterLink} from "../../my_core/router";
-// import { register } from "../../my_core/core";
-//
-// export { App_RegisterPage }
 
-//#########################
-
-export function App_ProfilePage () {
+export default function ProfilePage () {
     return VDom.createElement('div', { className: 'site-wrapper profile-view' },
         VDom.createElement('a', { className: 'back-link' },
             VDom.createElement('div', { className: 'arrow' },
@@ -38,9 +32,3 @@ export function App_ProfilePage () {
         )
     )
 }
-//############
-
-
-
-
-

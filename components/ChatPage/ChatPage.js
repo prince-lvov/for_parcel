@@ -1,12 +1,12 @@
 import { VDom } from "../../my_core/VDom";
 import Router, {RouterLink} from "../../my_core/router";
-export { App }
 import WebSocket from "../../my_core/WebSocket";
-import {register, create_chat, get_chats } from "../../my_core/core";
 
-//#########################
+import { state } from '../../my_core/core'
 
-function App ({state}) {
+const host = 'https://ya-praktikum.tech/api/v2'
+
+export default function ChatPage () {
     return VDom.createElement('div', { className: 'site-wrapper main-view'},
         VDom.createElement(Sidebar, {chats: state.chats}),
         VDom.createElement(ChatPageWithChat),
