@@ -89,6 +89,58 @@ async function getData () {
     Router.get().to('/messenger')
 }
 
+function InitSubmenu () {
+
+    const triggerEl = document.querySelector('.chat-menu')
+    if (triggerEl) {
+        triggerEl.classList.toggle('open')
+    }
+
+    const actionFormValues = {
+        addUser: {
+            formTitle: 'Добавить пользователя',
+            buttonValue: 'Добавить'
+        },
+        removeUser: {
+            formTitle: 'Удалить пользователя',
+            buttonValue: 'Удалить'
+        },
+        deleteChat: {
+            formTitle: 'Удалить чат с пользователем',
+            buttonValue: 'Удалить'
+        }
+    }
+
+    const children = document.querySelector('.submenu').querySelectorAll('li')
+    const actionTriggerEls = Array.from(children)
+
+    if (actionTriggerEls !== null) {
+        actionTriggerEls.forEach(actionTrigger => {
+            actionTrigger.addEventListener('click', () => {
+                const action = actionTrigger.dataAction
+                const availableActions = Object.keys(actionFormValues)
+                if (!action || !availableActions.includes(action)) {
+                    return true
+                }
+                const title = actionFormValues[action].formTitle
+                const buttonValue = actionFormValues[action].buttonValue
+
+                //state.popup = [action, title, buttonValue]
+
+                const popup = document.querySelector('.chat-action-popup')
+                const h2 = popup.querySelector('.h2').innerText = title
+                const button = popup.getElementsByTagName('button')[0].textContent = buttonValue
+                popup.style.display = 'block'
+
+                if (triggerEl) {
+                    triggerEl.classList.remove('open')
+                }
+            })
+        })
+    }
+}
+
+
 export default function ChatPage () {
     if (!state.user) getData()
 
@@ -100,7 +152,6 @@ export default function ChatPage () {
         VDom.createElement(Sidebar, {chats: state.chats}),
         VDom.createElement(Popup)
     ]
-
     return VDom.createElement('div', { className: 'site-wrapper main-view'}, children)
 }
 
@@ -198,17 +249,17 @@ function ChatHeader () {
     return VDom.createElement('div', { className: 'chat-messages--header' },
         VDom.createElement('div', { className: 'smile' }),
         VDom.createElement('div', { className: 'name' }, 'Игорь'),
-        VDom.createElement('div', { className: 'chat-menu' },
+        VDom.createElement('div', { className: 'chat-menu', onclick: InitSubmenu },
             VDom.createElement('img', { src: require('../../images/chat-icons/chat-menu.svg'), alt: '' })
         ),
         VDom.createElement('ul', { className: 'submenu' },
-            VDom.createElement('li', { 'data-action': 'addUser' },
+            VDom.createElement('li', { dataAction: 'addUser' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/add-user.svg') }),
                 VDom.createElement('span', { className: 'menu-action' }, 'Добавить пользователя')),
-            VDom.createElement('li', { 'data-action': 'removeUser' },
+            VDom.createElement('li', { dataAction: 'removeUser' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/remove-user.svg') }),
                 VDom.createElement('span', { className: 'menu-action' }, 'Удалить пользователя')),
-            VDom.createElement('li', { 'data-action': 'deleteChat' },
+            VDom.createElement('li', { dataAction: 'deleteChat' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/delete-chat.svg') }),
                 VDom.createElement('span', { className: 'menu-action' }, 'Удалить чат'))
         )
@@ -278,18 +329,20 @@ function MessageImage () {
 }
 
 function Popup () {
-    return VDom.createElement('div', { className: 'chat-action-popup', style: 'display: none;' },
+    return VDom.createElement('div', { className: 'chat-action-popup' },
         VDom.createElement('div', { className: 'window modal' },
-            VDom.createElement('form', { 'data-action': 'AddUser'},
+            VDom.createElement('form', { },
                 VDom.createElement('img', { src: require('../../images/main-logo.svg'), alt: '' }),
-                VDom.createElement('h2', {}, 'Добавить пользователя'),
+                VDom.createElement('h2', {className: 'h2' }),
                 VDom.createElement('div', { className: 'input-group' },
                     VDom.createElement('label', {}, 'Логин'),
                     VDom.createElement('input', { type: 'text' })),
                 VDom.createElement('div', { className: 'error' }),
                 VDom.createElement('div', { className: 'modal-bottom' },
                     VDom.createElement('button', {}),
-                    VDom.createElement('div', { className: 'cancel' }, 'Отмена'))))
+                    VDom.createElement('div', { className: 'cancel', onclick: (e) => {
+                            document.querySelector('.chat-action-popup').style.display = 'none'
+                        } }, 'Отмена'))))
     )
 }
 
