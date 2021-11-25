@@ -58,8 +58,26 @@ async function getData () {
     Router.get().to('/settings')
 }
 
+async function loadAvatar (e) {
+    let file = e.target.files[0]
+    let formData = new FormData()
+    formData.append('avatar', file)
+    const response = await fetch(host + '/user/profile/avatar', { method: 'PUT', mode: 'cors', credentials: 'include', body: formData })
+    const result = await response.json()
+    state.user.avatar = result.avatar
+    Router.get().to('/settings')
+}
+
 export default function ProfilePage () {
     if (!state.user) getData()
+
+    const avatar = [
+        VDom.createElement('input', { type: 'file', onchange: loadAvatar })
+    ]
+
+    if (state.user.avatar) avatar.unshift(
+        VDom.createElement('img', { src: 'https://ya-praktikum.tech/api/v2/resources' + state.user.avatar })
+    )
 
     return VDom.createElement('div', { className: 'site-wrapper profile-view' },
         VDom.createElement('a', { className: 'back-link' },
@@ -67,7 +85,7 @@ export default function ProfilePage () {
                 VDom.createElement('img', { src: require('../../images/back-arrow.svg'), alt: ''}))
         ),
         VDom.createElement('div', { className: 'center_class' },
-            VDom.createElement('div', { className: 'big_avatar'}),
+            VDom.createElement('div', { className: state.user.avatar ? 'big_avatar with_avatar' : 'big_avatar' }, avatar),
             VDom.createElement('div', { className: 'new_name' }, state.user?.first_name),
             VDom.createElement('div',{ className: 'profile_field' },
                 VDom.createElement('label', { className: 'field_assignment' }, 'Имя'),
