@@ -88,3 +88,12 @@ class HTTPTransport {
         });
     };
 }
+
+// console.log(new HTTPTransport().get('https://reqres.in/api/users/2', { method: METHOD.GET, data: JSON.stringify({ title: 'Мой чат', }) }))
+
+// const response = new Response();
+// const TestErr = new Promise((resolve, reject) => {
+//     new HTTPTransport().get('https://reqres.in/api/users/2', {timeout: 6000, data: {}, headers: {'Content-Type': 'text/plain'} })
+//         .then((xhr) => resolve(new Response(xhr)))
+// })
+// console.log(TestErr)
