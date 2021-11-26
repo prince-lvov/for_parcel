@@ -6,9 +6,13 @@ const host = 'https://ya-praktikum.tech/api/v2'
 
 async function login (e) {
     e.preventDefault()
-    const login = (document.getElementsByName('login')[0]).value
-    const password = (document.getElementsByName('password')[0]).value
-    
+    const loginInput = (document.getElementsByName('login')[0]) as HTMLInputElement
+    const login = loginInput.value
+    const passwordInput = (document.getElementsByName('password')[0]) as HTMLInputElement
+    const password = passwordInput.value
+
+
+
     const loginResult = (await fetch(`${host}/auth/signin`, {
         method: 'POST',
         credentials: 'include',
@@ -49,12 +53,12 @@ export default function LoginPage () {
         VDom.createElement('div', { className: 'modal' },
             VDom.createElement('img', { src: require('../../images/main-logo.svg'), alt: 'Messenger'}),
             VDom.createElement('h2', {}, 'Авторизация'),
-            VDom.createElement(LoginForm)
+            VDom.createElement(LoginForm, {})
         )
     )
 }
 
-function LoginForm () {
+export function LoginForm () {
     return VDom.createElement('form', { className: 'login' },
         VDom.createElement('div', { className: 'input-group' },
             VDom.createElement('label', { for: 'login' }, 'Логин'),

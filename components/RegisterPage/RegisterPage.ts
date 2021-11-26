@@ -5,13 +5,20 @@ const host = 'https://ya-praktikum.tech/api/v2'
 
 async function register (e) {
     e.preventDefault()
-    const first_name = (document.getElementsByName('first_name')[0]).value
-    const second_name = (document.getElementsByName('second_name')[0]).value
-    const login = (document.getElementsByName('login')[0]).value
-    const email = (document.getElementsByName('email')[0]).value
-    const phone = (document.getElementsByName('phone')[0]).value
-    const password1 = (document.getElementsByName('password1')[0]).value
-    const password2 = (document.getElementsByName('password2')[0]).value
+    const first_nameInput = (document.getElementsByName('first_name')[0]) as HTMLInputElement
+    const first_name = first_nameInput.value
+    const second_nameInput = (document.getElementsByName('second_name')[0]) as HTMLInputElement
+    const second_name = second_nameInput.value
+    const loginInput = (document.getElementsByName('login')[0]) as HTMLInputElement
+    const login = loginInput.value
+    const emailInput = (document.getElementsByName('email')[0]) as HTMLInputElement
+    const email = emailInput.value
+    const phoneInput = (document.getElementsByName('phone')[0]) as HTMLInputElement
+    const phone = phoneInput.value
+    const password1Input = (document.getElementsByName('password1')[0]) as HTMLInputElement
+    const password1 = password1Input.value
+    const password2Input = (document.getElementsByName('password2')[0])as HTMLInputElement
+    const password2 = password2Input.value
 
     const registerResult = (await fetch(`${host}/auth/signup`, {
         method: 'POST',
@@ -45,12 +52,12 @@ export default function RegisterPage () {
         VDom.createElement('div', { className: 'modal' },
             VDom.createElement('img', { src: require('../../images/main-logo.svg'), alt: 'Messenger'}),
             VDom.createElement('h2', {}, 'Регистрация'),
-            VDom.createElement(RegisterForm)
+            VDom.createElement(RegisterForm, {})
         )
     )
 }
 
-function RegisterForm () {
+export function RegisterForm () {
     return VDom.createElement('form', { className: 'register' },
         VDom.createElement('div', { className: 'input-group' },
             VDom.createElement('label', { for: 'name' }, 'Имя'),

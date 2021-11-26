@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "outDir": "./lib",
+        "rootDir": "../",
+        "noEmit": true,
+        "skipLibCheck": true
+    },
+    "include": ["src/**/*",
+        "src/index.spec.ts"
+    ],
+    "exclude": ["node_modules"]
+}

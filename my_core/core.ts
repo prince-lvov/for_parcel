@@ -3,7 +3,8 @@ import { VDom } from "./VDom";
 
 export const state = {
     timer: new Date(),
-    chats: []
+    chats: [],
+    user: {}
 }
 
 const host = 'https://ya-praktikum.tech/api/v2'
@@ -156,7 +157,7 @@ export function renderView (state, page) {
     )
 }
 
-function render (virtualDom, realDomRoot) {
+export function render (virtualDom, realDomRoot) {
     const evaluatedVirtualDom = evaluate(virtualDom)
 
     const virtualDomRoot = {
@@ -196,7 +197,7 @@ function sync (virtualNode, realNode) {
     // Sync element
     if (virtualNode.props) {
         Object.entries(virtualNode.props).forEach(([name, value]) => {
-            if (name === 'children' && name === 'key') {
+            if (name === 'children' || name === 'key') {
                 return
             }
             if (realNode[name] !== value) {
