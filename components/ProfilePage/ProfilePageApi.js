@@ -66,3 +66,21 @@ export async function loadAvatar (e) {
     state.user.avatar = result.avatar
     Router.get().to('/settings')
 }
+
+export async function logout () {
+    const logoutResult = (await fetch(`${host}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'content-type': 'application/json',
+        },
+    }))
+
+    if (logoutResult.status !== 200) {
+        const error = await logoutResult.json()
+        alert(error.reason)
+        return
+    }
+
+    Router.get().to('/')
+}

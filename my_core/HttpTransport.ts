@@ -1,4 +1,4 @@
-export { HTTPTransport as default }
+export { HttpTransport as default }
 
 enum METHODS {
     GET = 'GET',
@@ -30,7 +30,7 @@ function queryStringify(data: IHeaders):string {
     }, '?');
 }
 
-class HTTPTransport {
+class HttpTransport {
     get(url: string, options: OptionWithoutMethod = {}): Promise<XMLHttpRequest> {
         return this.request(url, {...options, method: METHODS.GET}, options.timeout)
     }

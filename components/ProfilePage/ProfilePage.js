@@ -1,6 +1,6 @@
 import { VDom } from "../../my_core/VDom";
 import { state } from '../../my_core/core'
-import {save, getData, loadAvatar} from "./ProfilePageApi";
+import {save, getData, loadAvatar, logout} from "./ProfilePageApi";
 
 
 export default function ProfilePage () {
@@ -44,7 +44,7 @@ export default function ProfilePage () {
                 VDom.createElement('label', { className: 'change_data_field', onclick: save }, 'Изменить данные')),
             VDom.createElement('div',{ className: 'profile_field change_data_flex2' },
                 VDom.createElement('label', { className: 'change_data_field' }, 'Изменить пароль')),
-            VDom.createElement('button', { className: 'green_button_exit' }, 'Выйти')
+            VDom.createElement('button', { className: 'green_button_exit', onclick: logout }, 'Выйти')
         )
     )
 }
