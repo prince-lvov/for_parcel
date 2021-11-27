@@ -3,7 +3,9 @@ import { VDom } from "./VDom";
 export const state = {
     timer: new Date(),
     chats: [],
-    user: {}
+    user: {},
+    currentChat: {},
+    userInChat:{}
 }
 
 export function renderView (state, page) {

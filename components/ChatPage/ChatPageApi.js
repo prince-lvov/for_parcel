@@ -1,13 +1,19 @@
 import { state } from '../../my_core/core'
 import Router from '../../my_core/router'
 import WebSocket from '../../my_core/WebSocket'
-
+import {VDom} from "../../my_core/VDom";
+import {ChatHeader} from "./ChatPage";
+import {render} from "../../my_core/core";
 
 const host = 'https://ya-praktikum.tech/api/v2'
 
 export async function create_chat (e) {
     e.preventDefault()
-    const title = (document.getElementsByName('title')[0]).value
+    let titleInput = document.getElementsByName('title')[0]
+    let title = ''
+    if (titleInput) {
+        title = titleInput.value
+    }
 
     const create_chatResult = (await fetch(`${host}/chats`, {
         method: 'POST',
@@ -48,6 +54,8 @@ export async function selectChat (chat) {
         state.messages = []
     }
 
+    state.currentChat = chat //Добавляем конкретный чат в state
+
     const tokenResult = await fetch(`${host}/chats/token/${chat.id}`, {
         method: 'POST',
         mode: 'cors',
@@ -64,7 +72,13 @@ export async function selectChat (chat) {
 
 export async function sendMessage (e) {
     e.preventDefault()
-    const message = (document.getElementsByName('message')[0]).value
+    let messageInput = (document.getElementsByName('message')[0])
+    let message = ''
+    if (messageInput) {
+        message = messageInput.value
+    }
+
+
     state.webSocket.send(message)
 }
 
@@ -86,4 +100,60 @@ export async function getData () {
     state.user = await userResult.json()
 
     Router.get().to('/messenger')
+}
+
+export async function addUsersToChat (e) {
+    e.preventDefault()
+    const loginDiv = document.querySelector('.chat-action-popup')
+    const loginInput = loginDiv.getElementsByTagName('input')[0]
+    const login = loginInput.value
+
+    const SearchUserByLogin = (await fetch(`${host}/user/search`, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({ login }),
+    }))
+
+    if (SearchUserByLogin.status !== 200) {
+        const error = await SearchUserByLogin.json()
+        alert(error.reason)
+        return
+    }
+
+    const SearchUserByLoginResult = await SearchUserByLogin.json()
+    const users = []
+    users.push(SearchUserByLoginResult[0].id)
+    state.userInChat = SearchUserByLoginResult[0]
+
+    const chatId = state.currentChat.id
+
+    const addUsersToChat = (await fetch(`${host}/chats/users`, {
+        method: 'PUT',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            users,
+            chatId
+        }),
+    }))
+
+    if (addUsersToChat.status !== 200) {
+        const error = await addUsersToChat.json()
+        alert(error.reason)
+        return
+    }
+    //state.userInChat.display_name это значение нужно вставить вместо Игоря в Header
+
+    // render(
+    //     VDom.createElement(ChatHeader, {state}),
+    //     document.querySelector('.chat-messages--parent')
+    // )
+
 }

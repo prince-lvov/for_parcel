@@ -1,7 +1,7 @@
 import { VDom } from "../../my_core/VDom";
 import Router from "../../my_core/router";
 import { state } from '../../my_core/core'
-import { getData, sendMessage, selectChat, create_chat} from "./ChatPageApi"
+import {getData, sendMessage, selectChat, create_chat, addUsersToChat} from "./ChatPageApi"
 
 function InitSubmenu () {
 
@@ -124,10 +124,10 @@ function ChatPageWithChat () {
     )
 }
 
-function ChatHeader () {
+export function ChatHeader () {
     return VDom.createElement('div', { className: 'chat-messages--header' },
         VDom.createElement('div', { className: 'smile' }),
-        VDom.createElement('div', { className: 'name' }, 'Игорь'),
+        VDom.createElement('div', { className: 'name' }),
         VDom.createElement('div', { className: 'chat-menu', onclick: InitSubmenu },
             VDom.createElement('img', { src: require('../../images/chat-icons/chat-menu.svg'), alt: '' })
         ),
@@ -218,7 +218,7 @@ function Popup () {
                     VDom.createElement('input', { type: 'text' })),
                 VDom.createElement('div', { className: 'error' }),
                 VDom.createElement('div', { className: 'modal-bottom' },
-                    VDom.createElement('button', {}),
+                    VDom.createElement('button', { name: 'login', onclick: addUsersToChat }),
                     VDom.createElement('div', { className: 'cancel', onclick: (e) => {
                             document.querySelector('.chat-action-popup').style.display = 'none'
                         } }, 'Отмена'))))
