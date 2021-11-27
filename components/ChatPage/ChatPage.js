@@ -1,93 +1,7 @@
 import { VDom } from "../../my_core/VDom";
-import Router, {RouterLink} from "../../my_core/router";
-import WebSocket from "../../my_core/WebSocket";
-
+import Router from "../../my_core/router";
 import { state } from '../../my_core/core'
-
-const host = 'https://ya-praktikum.tech/api/v2'
-
-async function create_chat (e) {
-    e.preventDefault()
-    const title = (document.getElementsByName('title')[0]).value
-
-    const create_chatResult = (await fetch(`${host}/chats`, {
-        method: 'POST',
-        credentials: 'include',
-        mode: 'cors',
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({ title }),
-    }))
-
-    if (create_chatResult.status !== 200) {
-        const error = await create_chatResult.json()
-        alert(error.reason)
-        return
-    }
-
-    const chatsResult = await fetch(`${host}/chats`, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'include',
-    })
-
-    state.chats = await chatsResult.json()
-
-    Router.get().to('/messenger')
-}
-
-async function selectChat (chat) {
-    const onMessage = (message) => {
-        console.log(message)
-        const messages = JSON.parse(message)
-        Array.isArray(messages) ? state.messages.push(...messages) : state.messages.push(messages)
-        Router.get().to('/messenger')
-    }
-
-    if (state.currentChat?.id != chat.id) {
-        state.messages = []
-    }
-
-    const tokenResult = await fetch(`${host}/chats/token/${chat.id}`, {
-        method: 'POST',
-        mode: 'cors',
-        credentials: 'include',
-    })
-
-    const token = await tokenResult.json()
-
-    state.currentChat = chat
-    state.webSocket = new WebSocket(state.user.id, chat.id, token.token, onMessage, () => { state.webSocket.getOld() })
-
-    Router.get().to('/messenger')
-}
-
-async function sendMessage (e) {
-    e.preventDefault()
-    const message = (document.getElementsByName('message')[0]).value
-    state.webSocket.send(message)
-}
-
-async function getData () {
-    const chatsResult = await fetch(`${host}/chats`, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'include',
-    })
-
-    state.chats = await chatsResult.json()
-
-    const userResult = await fetch(`${host}/auth/user`, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'include',
-    })
-
-    state.user = await userResult.json()
-
-    Router.get().to('/messenger')
-}
+import { getData, sendMessage, selectChat, create_chat} from "./ChatPageApi"
 
 function InitSubmenu () {
 
@@ -125,8 +39,6 @@ function InitSubmenu () {
                 const title = actionFormValues[action].formTitle
                 const buttonValue = actionFormValues[action].buttonValue
 
-                //state.popup = [action, title, buttonValue]
-
                 const popup = document.querySelector('.chat-action-popup')
                 const h2 = popup.querySelector('.h2').innerText = title
                 const button = popup.getElementsByTagName('button')[0].textContent = buttonValue
@@ -139,7 +51,6 @@ function InitSubmenu () {
         })
     }
 }
-
 
 export default function ChatPage () {
     if (!state.user) getData()
@@ -158,8 +69,6 @@ export default function ChatPage () {
 function Sidebar ({ chats }) {
     return VDom.createElement('aside', {},
         VDom.createElement(SidebarHeader),
-        //VDom.createElement(SidebarSearchResults1),
-        //VDom.createElement(SidebarSearchResults2),
         VDom.createElement(ChatListArea, { chats }),
     )
 }
@@ -181,33 +90,10 @@ function SidebarSearch () {
         VDom.createElement('input', { type: 'search', name: 'title' }),
         VDom.createElement('div', { className: 'search-background' },
             VDom.createElement('img', { src: require('../../images/search.svg'), alt: '' }),
-            VDom.createElement('span', {}, 'Название нового чата')),
-    //  VDom.createElement('img', { className: 'search-icon', src: require('../../images/search.svg'), alt: '' })
+            VDom.createElement('span', {}, 'Название нового чата'))
     )
 }
-// function SidebarSearch () {
-//     return VDom.createElement('div', { className: 'search-line' },
-//         VDom.createElement('input', { type: 'search' }),
-//         VDom.createElement('div', { className: 'search-background' },
-//             VDom.createElement('img', { src: require('../../images/search.svg'), alt: '' }),
-//             VDom.createElement('span', {}, 'Поиск')),
-//         VDom.createElement('img', { className: 'search-icon', src: require('../../images/search.svg'), alt: '' })
-//     )
-// }
 
-// function SidebarSearchResults1 () {
-//     return VDom.createElement('div',{ className: 'search-results' })
-// }
-//
-// function SidebarSearchResults2 () {
-//     return VDom.createElement('template', { className: 'search-results--template'},
-//         VDom.createElement('div', {className: 'search-result--wrapper' },
-//             VDom.createElement('div',{ className: 'search-results' },
-//                 VDom.createElement('div',{ className: 'search-result--smile' }),
-//                 VDom.createElement('div', { className: 'search-result--name' })),
-//             VDom.createElement('div', { className: 'search-result--separate-line' }))
-//     )
-// }
 
 function ChatListArea ({ chats }) {
     return VDom.createElement('div', { className: 'chat-list' },
@@ -227,13 +113,6 @@ function ChatListItems ({ chat }) {
     )
 }
 //############
-
-// function ChatPageWithChat () {
-//     return VDom.createElement('main', { className: 'centered' },
-//         VDom.createElement('img', { src: require('../../images/chat.svg') }),
-//         VDom.createElement('div', { className: 'info' }, 'Выберите чат, чтобы отправить сообщение')
-//     )
-// }
 
 function ChatPageWithChat () {
     return VDom.createElement('main', { },
