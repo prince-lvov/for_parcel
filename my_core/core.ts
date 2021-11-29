@@ -4,8 +4,10 @@ export const state = {
     timer: new Date(),
     chats: [],
     user: {},
-    currentChat: {},
-    userInChat:{}
+    messages: [],
+    // currentChat: {},
+    userInChat:{},
+    OnlyUsersInChatAlready: ''
 }
 
 export function renderView (state, page) {

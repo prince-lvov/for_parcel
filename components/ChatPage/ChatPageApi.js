@@ -40,6 +40,7 @@ export async function create_chat (e) {
     state.chats = await chatsResult.json()
 
     Router.get().to('/messenger')
+
 }
 
 export async function selectChat (chat) {
@@ -67,7 +68,10 @@ export async function selectChat (chat) {
     state.currentChat = chat
     state.webSocket = new WebSocket(state.user.id, chat.id, token.token, onMessage, () => { state.webSocket.getOld() })
 
+    await WhoInThisChat(chat.id)
+
     Router.get().to('/messenger')
+
 }
 
 export async function sendMessage (e) {
@@ -149,11 +153,32 @@ export async function addUsersToChat (e) {
         alert(error.reason)
         return
     }
-    //state.userInChat.display_name это значение нужно вставить вместо Игоря в Header
+
+    document.querySelector('.chat-action-popup').style.display = 'none'
+
+    await selectChat(chatId)
+
 
     // render(
     //     VDom.createElement(ChatHeader, {state}),
     //     document.querySelector('.chat-messages--parent')
     // )
 
+}
+
+async function WhoInThisChat (chatId) {
+    const userResult = await fetch(`${host}/chats/${chatId}/users`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+    })
+
+    state.usersInChatAlready = await userResult.json()
+
+    console.log(state.usersInChatAlready)
+
+    state.OnlyUsersInChatAlready = ''
+    for (let i in state.usersInChatAlready) {
+        state.OnlyUsersInChatAlready += state.usersInChatAlready[i].first_name + '; ';
+    }
 }

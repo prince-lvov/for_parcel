@@ -127,7 +127,7 @@ function ChatPageWithChat () {
 export function ChatHeader () {
     return VDom.createElement('div', { className: 'chat-messages--header' },
         VDom.createElement('div', { className: 'smile' }),
-        VDom.createElement('div', { className: 'name' }),
+        VDom.createElement('div', { className: 'name'}, state.OnlyUsersInChatAlready),
         VDom.createElement('div', { className: 'chat-menu', onclick: InitSubmenu },
             VDom.createElement('img', { src: require('../../images/chat-icons/chat-menu.svg'), alt: '' })
         ),
