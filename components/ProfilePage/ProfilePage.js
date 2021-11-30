@@ -1,11 +1,15 @@
 import { VDom } from "../../my_core/VDom";
 import { state } from '../../my_core/core'
-import {save, getData, loadAvatar, logout} from "./ProfilePageApi";
+import {save, getData, loadAvatar, logout, getDataProfile} from "./ProfilePageApi";
 import Router from "../../my_core/router";
+import {selectChat, getData} from "../ChatPage/ChatPageApi";
 
 
 export default function ProfilePage () {
-    if (!state.user) getData()
+
+    if (!state.user) getDataProfile().then(() => {
+
+    })
 
     const avatar = [
         VDom.createElement('input', { type: 'file', onchange: loadAvatar })

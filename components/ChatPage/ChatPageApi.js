@@ -166,12 +166,6 @@ export async function AddOrDeleteUserToChat (e, choice) {
 
     await selectChat(state.currentChat)
 
-
-    // render(
-    //     VDom.createElement(ChatHeader, {state}),
-    //     document.querySelector('.chat-messages--parent')
-    // )
-
 }
 
 async function WhoInThisChat (chatId) {

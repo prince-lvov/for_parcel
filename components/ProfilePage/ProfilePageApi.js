@@ -45,7 +45,7 @@ export async function save (e) {
     state.user.phone = phone
 }
 
-export async function getData () {
+export async function getDataProfile () {
     const userResult = await fetch(`${host}/auth/user`, {
         method: 'GET',
         mode: 'cors',
