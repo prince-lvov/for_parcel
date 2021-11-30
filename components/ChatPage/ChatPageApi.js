@@ -44,16 +44,15 @@ export async function create_chat (e) {
 }
 
 export async function selectChat (chat) {
+    console.log(chat)
     const onMessage = (message) => {
         console.log(message)
         const messages = JSON.parse(message)
-        Array.isArray(messages) ? state.messages.push(...messages) : state.messages.push(messages)
+        Array.isArray(messages) ? state.messages.push(...messages.reverse()) : state.messages.push(messages)
         Router.get().to('/messenger')
     }
 
-    if (state.currentChat?.id != chat.id) {
-        state.messages = []
-    }
+    state.messages = []
 
     state.currentChat = chat //Добавляем конкретный чат в state
 
@@ -66,9 +65,11 @@ export async function selectChat (chat) {
     const token = await tokenResult.json()
 
     state.currentChat = chat
-    state.webSocket = new WebSocket(state.user.id, chat.id, token.token, onMessage, () => { state.webSocket.getOld() })
+    state.webSocket = new WebSocket(state.user.id, chat.id, token.token, onMessage, (v) => { v.getOld() })
 
     await WhoInThisChat(chat.id)
+
+    localStorage.currentChat = JSON.stringify(chat)
 
     Router.get().to('/messenger')
 
@@ -163,7 +164,7 @@ export async function AddOrDeleteUserToChat (e, choice) {
 
     document.querySelector('.chat-action-popup').style.display = 'none'
 
-    await selectChat(chatId)
+    await selectChat(state.currentChat)
 
 
     // render(
@@ -174,6 +175,7 @@ export async function AddOrDeleteUserToChat (e, choice) {
 }
 
 async function WhoInThisChat (chatId) {
+    console.log('WHO')
     const userResult = await fetch(`${host}/chats/${chatId}/users`, {
         method: 'GET',
         mode: 'cors',
