@@ -1,4 +1,5 @@
 import Router from "../../my_core/router";
+import { logout } from "../ProfilePage/ProfilePageApi"
 
 const host = 'https://ya-praktikum.tech/api/v2'
 
@@ -43,5 +44,8 @@ export async function register (e) {
     }
 
     alert('Регистрация успешна!')
+
+    await logout()
+
     Router.get().to('/')
 }
