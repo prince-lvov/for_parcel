@@ -115,7 +115,6 @@ export async function ChoiceAction (e) {
 
 export async function AddOrDeleteUserToChat (e, choice) {
     e.preventDefault()
-    console.log('Это добавить')
     const loginDiv = document.querySelector('.chat-action-popup')
     const loginInput = loginDiv.getElementsByTagName('input')[0]
     const login = loginInput.value
