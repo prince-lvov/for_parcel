@@ -6,7 +6,8 @@ export const state = {
     messages: [],
     // currentChat: {},
     userInChat:{},
-    OnlyUsersInChatAlready: ''
+    OnlyUsersInChatAlready: '',
+    webSocket: null
 }
 
 export function renderView (state, page) {
