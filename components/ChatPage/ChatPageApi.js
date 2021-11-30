@@ -105,9 +105,17 @@ export async function getData () {
 
     Router.get().to('/messenger')
 }
-
-export async function addUsersToChat (e) {
+export async function ChoiceAction (e) {
     e.preventDefault()
+    const choiceButton = document.querySelector('.choice_button').textContent
+    choiceButton === 'Добавить' ? await AddOrDeleteUserToChat(e, 'PUT') : await AddOrDeleteUserToChat(e, 'DELETE')
+
+}
+
+
+export async function AddOrDeleteUserToChat (e, choice) {
+    e.preventDefault()
+    console.log('Это добавить')
     const loginDiv = document.querySelector('.chat-action-popup')
     const loginInput = loginDiv.getElementsByTagName('input')[0]
     const login = loginInput.value
@@ -136,7 +144,7 @@ export async function addUsersToChat (e) {
     const chatId = state.currentChat.id
 
     const addUsersToChat = (await fetch(`${host}/chats/users`, {
-        method: 'PUT',
+        method: `${choice}`,
         mode: 'cors',
         credentials: 'include',
         headers: {
@@ -182,3 +190,4 @@ async function WhoInThisChat (chatId) {
         state.OnlyUsersInChatAlready += state.usersInChatAlready[i].first_name + '; ';
     }
 }
+

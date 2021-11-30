@@ -1,7 +1,6 @@
 import { VDom } from "./VDom";
 
 export const state = {
-    timer: new Date(),
     chats: [],
     user: {},
     messages: [],

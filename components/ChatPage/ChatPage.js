@@ -1,7 +1,7 @@
 import { VDom } from "../../my_core/VDom";
 import Router from "../../my_core/router";
 import { state } from '../../my_core/core'
-import {getData, sendMessage, selectChat, create_chat, addUsersToChat} from "./ChatPageApi"
+import {getData, sendMessage, selectChat, create_chat, ChoiceAction} from "./ChatPageApi"
 
 function InitSubmenu () {
 
@@ -40,8 +40,8 @@ function InitSubmenu () {
                 const buttonValue = actionFormValues[action].buttonValue
 
                 const popup = document.querySelector('.chat-action-popup')
-                const h2 = popup.querySelector('.h2').innerText = title
-                const button = popup.getElementsByTagName('button')[0].textContent = buttonValue
+                popup.querySelector('.h2').innerText = title
+                popup.getElementsByTagName('button')[0].textContent = buttonValue
                 popup.style.display = 'block'
 
                 if (triggerEl) {
@@ -105,10 +105,10 @@ function ChatListItems ({ chat }) {
     return VDom.createElement('div', { className: 'chat-wrapper', onclick: () => { selectChat(chat) } },
         VDom.createElement('div', { className: 'chat'},
             VDom.createElement('div', { className: 'chat--smile' }),
-            VDom.createElement('time', { className: 'chat--time' }),
-            VDom.createElement('div', { className: 'chat--author' }, chat.title),
-            VDom.createElement('div', { className: 'chat--message' }),
-            VDom.createElement('div', { className: 'chat--unread-count' }, chat.unread_count)),
+          //VDom.createElement('time', { className: 'chat--time' }),
+            VDom.createElement('div', { className: 'chat--author' }, chat.title)),
+          //VDom.createElement('div', { className: 'chat--message' }),
+          //VDom.createElement('div', { className: 'chat--unread-count' })),
         VDom.createElement('div', { className: 'chat--separate-line' })
     )
 }
@@ -147,13 +147,11 @@ export function ChatHeader () {
 
 function InputArea () {
     return VDom.createElement('form', { className: 'chat-messages--input-area' },
-        VDom.createElement('div', { className: 'clip'},
-            VDom.createElement('button', { type: 'button' },
-                VDom.createElement('img', { src: require('../../images/chat-icons/clip.svg'), alt: '' }))),
+         VDom.createElement('div', { className: 'clip'},
+                 VDom.createElement('img', { src: require('../../images/chat-icons/clip.svg'), alt: '' })),
         VDom.createElement('input', { type: 'text', placeholder: 'Сообщение', name: 'message' }),
         VDom.createElement('div', { className: 'arrow', onclick: sendMessage },
-            VDom.createElement('button', { type: 'submit' },
-                VDom.createElement('img', { src: require('../../images/chat-icons/send-arrow.svg'), alt: '' }))),
+                VDom.createElement('img', { src: require('../../images/chat-icons/send-arrow.svg'), alt: '' })),
         VDom.createElement('ul', { className: 'submenu' },
             VDom.createElement('li', { },
                 VDom.createElement('img', { src: require('../../images/chat-icons/attach-photo-video.svg') }),
@@ -170,7 +168,7 @@ function InputArea () {
 
 function MessagesBody () {
     const messages = state.messages.map(m => {
-        return m.user_id == state.user.id ? VDom.createElement(MessageMy, { message: m }) : VDom.createElement(MessageYou, { message: m })
+        return m.user_id === state.user.id ? VDom.createElement(MessageMy, { message: m }) : VDom.createElement(MessageYou, { message: m })
     })
     return VDom.createElement('div', { className: 'chat-messages--body' },
         VDom.createElement('div', { className: 'chat-message date-line' }, '17 Мая 2021'),
@@ -218,8 +216,8 @@ function Popup () {
                     VDom.createElement('input', { type: 'text' })),
                 VDom.createElement('div', { className: 'error' }),
                 VDom.createElement('div', { className: 'modal-bottom' },
-                    VDom.createElement('button', { name: 'login', onclick: addUsersToChat }),
-                    VDom.createElement('div', { className: 'cancel', onclick: (e) => {
+                    VDom.createElement('button', { className: 'choice_button', name: 'login', onclick: ChoiceAction }),
+                    VDom.createElement('div', { className: 'cancel', onclick: () => {
                             document.querySelector('.chat-action-popup').style.display = 'none'
                         } }, 'Отмена'))))
     )

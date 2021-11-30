@@ -50,14 +50,14 @@ class WebSocketService {
             alert('Ошибка соединения');
         });
 
-        let timer
-        if (timer !== undefined) {clearInterval(timer)}
-
-        const pingMessage = JSON.stringify({
-            type: 'ping'
-        })
-
-        timer = setInterval(() => this.socket.send(pingMessage), 10000)
+        // let timer
+        // if (timer !== undefined) {clearInterval(timer)}
+        //
+        // const pingMessage = JSON.stringify({
+        //     type: 'ping'
+        // })
+        //
+        // timer = setInterval(() => this.socket.send(pingMessage), 10000)
 
     }
 
