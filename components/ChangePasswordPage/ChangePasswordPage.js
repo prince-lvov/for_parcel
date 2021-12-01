@@ -1,7 +1,7 @@
 import { VDom } from "../../my_core/VDom";
 import { state } from '../../my_core/core'
-import { getData, loadAvatar } from "../ProfilePage/ProfilePageApi";
-
+import { loadAvatar } from "../ProfilePage/ProfilePageApi";
+import { change_password } from "./ChangePasswordPageApi";
 
 export default function ChangePasswordPage () {
 
@@ -23,13 +23,10 @@ export default function ChangePasswordPage () {
             VDom.createElement('div', { className: 'new_name' }, state.user?.first_name),
             VDom.createElement('div',{ className: 'profile_field' },
                 VDom.createElement('label', { className: 'field_assignment' }, 'Старый пароль'),
-                VDom.createElement('input', { className: 'field_data', name: 'oldPassword', value: state.user?.first_name})),
+                VDom.createElement('input', { className: 'field_data', type: 'password', name: 'oldPassword', value: ''})),
             VDom.createElement('div',{ className: 'profile_field top_margin' },
                 VDom.createElement('label', { className: 'field_assignment' }, 'Новый пароль'),
-                VDom.createElement('input', { className: 'field_data', name: 'newPassword', value: state.user?.second_name })),
-            VDom.createElement('div',{ className: 'profile_field top_margin' },
-                VDom.createElement('label', { className: 'field_assignment' }, 'Повторите новый пароль'),
-                VDom.createElement('input', { className: 'field_data', name: 'repeat_newPassword', value: state.user?.display_name })),
+                VDom.createElement('input', { className: 'field_data', type: 'password', name: 'newPassword', value: '' })),
             VDom.createElement('button',{ className: 'green_button_exit', onclick : change_password }, 'Сохранить' ),
         )
     )

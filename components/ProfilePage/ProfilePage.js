@@ -1,6 +1,6 @@
 import { VDom } from "../../my_core/VDom";
 import { state } from '../../my_core/core'
-import {save, getData, loadAvatar, logout, getDataProfile} from "./ProfilePageApi";
+import {save, loadAvatar, logout, getDataProfile} from "./ProfilePageApi";
 import Router from "../../my_core/router";
 import {selectChat, getData} from "../ChatPage/ChatPageApi";
 
@@ -46,8 +46,8 @@ export default function ProfilePage () {
                 VDom.createElement('label', { className: 'field_assignment' }, 'Почта'),
                 VDom.createElement('input', { className: 'field_data', name: 'email', value: state.user?.email })),
             VDom.createElement('button',{ className: 'green_button_exit', onclick: save }, 'Изменить данные' ),
-            VDom.createElement('button',{ className: 'green_button_exit', onclick: () => {
-
+            VDom.createElement('button',{ className: 'green_button_exit', onclick: (e) => {
+                    e.preventDefault()
                     Router.get().to('/change_password')
                 }  }, 'Изменить пароль'),
             VDom.createElement('button', { className: 'green_button_exit', onclick: logout }, 'Выйти')
