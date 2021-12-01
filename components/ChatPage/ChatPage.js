@@ -184,7 +184,7 @@ function MessageMy ({ message }) {
         VDom.createElement('div', { className: 'chat-message--time-and-status' },
             VDom.createElement('div', { className: 'chat-message--status visible' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/message-read.svg'), alt: '' })),
-            VDom.createElement('time', { className: 'chat-message--time' }, '09:12'))
+            VDom.createElement('time', { className: 'chat-message--time' }, message.time.substring(11, 19).toLocaleString()))
     )
 }
 
@@ -194,7 +194,7 @@ function MessageYou ({ message }) {
         VDom.createElement('div', { className: 'chat-message--time-and-status' },
             VDom.createElement('div', { className: 'chat-message--status' },
                 VDom.createElement('img', { src: require('../../images/chat-icons/message-read.svg'), alt: '' })),
-            VDom.createElement('time', { className: 'chat-message--time' }, '09:34'))
+            VDom.createElement('time', { className: 'chat-message--time' }, message.time.substring(11, 19).toLocaleString()))
     )
 }
 
