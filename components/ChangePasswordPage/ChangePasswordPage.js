@@ -2,6 +2,7 @@ import { VDom } from "../../my_core/VDom";
 import { state } from '../../my_core/core'
 import { loadAvatar } from "../ProfilePage/ProfilePageApi";
 import { change_password } from "./ChangePasswordPageApi";
+import Router from "../../my_core/router";
 
 export default function ChangePasswordPage () {
 
@@ -14,7 +15,10 @@ export default function ChangePasswordPage () {
     )
 
     return VDom.createElement('div', { className: 'site-wrapper profile-view' },
-        VDom.createElement('a', { className: 'back-link' },
+        VDom.createElement('a', { className: 'back-link', onclick: (e) => {
+                    e.preventDefault()
+                    Router.get().to('/settings')
+                } },
             VDom.createElement('div', { className: 'arrow' },
                 VDom.createElement('img', { src: require('../../images/back-arrow.svg'), alt: ''}))
         ),

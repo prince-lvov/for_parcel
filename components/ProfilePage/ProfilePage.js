@@ -20,7 +20,10 @@ export default function ProfilePage () {
     )
 
     return VDom.createElement('div', { className: 'site-wrapper profile-view' },
-        VDom.createElement('a', { className: 'back-link' },
+        VDom.createElement('a', { className: 'back-link', onclick: (e) => {
+                    e.preventDefault()
+                    Router.get().to('/messenger')
+                } },
             VDom.createElement('div', { className: 'arrow' },
                 VDom.createElement('img', { src: require('../../images/back-arrow.svg'), alt: ''}))
         ),
